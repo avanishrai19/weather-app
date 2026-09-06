@@ -46,3 +46,5 @@ npm run build
 ```
 
 Both checks pass with the current version of the application.
+1. Clone the Repository
+git clone https://github.com/avanishrai19/weather-app.git
