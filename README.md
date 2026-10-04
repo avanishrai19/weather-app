@@ -45,6 +45,23 @@ npm run lint
 npm run build
 ```
 
-Both checks pass with the current version of the application.
-1. Clone the Repository
-git clone https://github.com/avanishrai19/weather-app.git
+# 🌤️ Weather App
+
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+![Vite](https://img.shields.io/badge/vite-%23646CFF.svg?style=for-the-badge&logo=vite&logoColor=white)
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=for-the-badge&logo=css3&logoColor=white)
+
+A beautiful, fast, and responsive Weather Application built with React and Vite. It provides real-time weather updates with a smooth, interactive user interface.
+
+## 🚀 Getting Started (Run Locally)
+
+Follow these simple steps to clone and run this project on your local machine.
+
+### Prerequisites
+Make sure you have [Node.js](https://nodejs.org/) installed on your computer.
+
+### Installation
+
+**1. Clone the repository**
+```bash
+git clone [https://github.com/avanishrai19/weather-app.git](https://github.com/avanishrai19/weather-app.git)
