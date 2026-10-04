@@ -1,59 +1,44 @@
-import { Card, CardContent, Grid, Typography } from "@mui/material";
+import { Card, CardContent, Typography } from "@mui/material";
+import { conditionFor } from "./WeatherDetails";
 
-function Forecast({ forecast }) {
-  if (!forecast) {
-    return null;
-  }
-
-  const getForecastIcon = (code) => {
-    if (code === 0) return "☀️";
-    if (code >= 1 && code <= 3) return "☁️";
-    if (code >= 51 && code <= 67) return "🌧️";
-    if (code >= 71 && code <= 77) return "❄️";
-    if (code >= 80 && code <= 82) return "🌦️";
-    if (code >= 95) return "⛈️";
-    return "🌤️";
-  };
+function Forecast({ forecast, displayTemp }) {
+  if (!forecast?.time) return null;
 
   return (
-    <Grid container spacing={2} sx={{ width: "100%" }}>
-      {forecast.time.map((date, index) => (
-        <Grid item xs={12} sm={6} md={4} lg={2.4} key={date}>
-          <Card
-            sx={{
-              height: "100%",
-              borderRadius: 4,
-              background: "rgba(255,255,255,0.06)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              color: "#fff",
-            }}
-          >
-            <CardContent sx={{ textAlign: "center", py: 2.5 }}>
-              <Typography variant="body2" color="rgba(255,255,255,0.75)">
-                {new Date(date).toLocaleDateString("en-US", {
-                  weekday: "short",
+    <div className="forecast-grid">
+      {forecast.time.map((date, index) => {
+        const condition = conditionFor(forecast.weather_code?.[index] ?? 0);
+        const Icon = condition.Icon;
+
+        return (
+          <Card className="forecast-card" key={date}>
+            <CardContent>
+              <Typography className="forecast-day">
+                {index === 0
+                  ? "Today"
+                  : new Date(date + "T12:00:00").toLocaleDateString("en", {
+                      weekday: "short",
+                    })}
+              </Typography>
+              <Typography className="forecast-date">
+                {new Date(date + "T12:00:00").toLocaleDateString("en", {
                   month: "short",
                   day: "numeric",
                 })}
               </Typography>
-
-              <Typography variant="h4" sx={{ my: 1.5 }}>
-                {getForecastIcon(forecast.weather_code?.[index] ?? 0)}
-              </Typography>
-
-              <Typography variant="h6" fontWeight={700}>
-                {forecast.temperature_2m_max[index]}°
-              </Typography>
-
-              <Typography variant="body2" color="rgba(255,255,255,0.75)">
-                Low {forecast.temperature_2m_min[index]}°
-              </Typography>
+              <Icon className="forecast-icon" sx={{ color: condition.color }} />
+              <Typography className="forecast-condition">{condition.label}</Typography>
+              <div className="forecast-temps">
+                <strong>{displayTemp(forecast.temperature_2m_max[index])}</strong>
+                <span>{displayTemp(forecast.temperature_2m_min[index])}</span>
+              </div>
             </CardContent>
           </Card>
-        </Grid>
-      ))}
-    </Grid>
+        );
+      })}
+    </div>
   );
 }
 
 export default Forecast;
+

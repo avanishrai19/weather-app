@@ -1,106 +1,54 @@
-import { Card, CardContent, Typography, Box, Stack } from "@mui/material";
+import { Card, CardContent, Stack, Typography } from "@mui/material";
+import { conditionFor } from "./WeatherDetails";
 
-function WeatherCard({ weather, loading, error }) {
-    if (loading) {
-        return (
-            <Box
-                sx={{
-                    mt: 4,
-                    px: 4,
-                    py: 2,
-                    borderRadius: 4,
-                    background: "rgba(255,255,255,0.08)",
-                    color: "#e0f2fe",
-                    border: "1px solid rgba(255,255,255,0.14)",
-                }}
-            >
-                <Typography>Loading weather...</Typography>
-            </Box>
-        );
-    }
+function WeatherCard({ weather, unit, displayTemp }) {
+  const condition = conditionFor(weather.weatherCode);
+  const Icon = condition.Icon;
 
-    if (error) {
-        return (
-            <Typography
-                color="error"
-                sx={{
-                    mt: 3,
-                    px: 3,
-                    py: 1.5,
-                    background: "rgba(239,68,68,0.12)",
-                    border: "1px solid rgba(239,68,68,0.35)",
-                    borderRadius: 3,
-                }}
-            >
-                {error}
-            </Typography>
-        );
-    }
+  return (
+    <Card className="current-card">
+      <CardContent className="current-card-content">
+        <div className="current-location">
+          <div>
+            <Typography className="location-name">{weather.city}</Typography>
+            <Typography className="location-country">{weather.country}</Typography>
+          </div>
+          <span className="live-pill">
+            <i /> LIVE
+          </span>
+        </div>
 
-    if (!weather) {
-        return null;
-    }
+        <div className="current-main">
+          <div>
+            <div className="current-temperature">{displayTemp(weather.temperature)}</div>
+            <Typography className="feels-label">Current temperature ° {unit}</Typography>
+          </div>
 
-    const getWeatherCondition = (code) => {
-        if (code === 0) return { label: "Clear Sky", icon: "☀️" };
-        if (code >= 1 && code <= 3) return { label: "Cloudy", icon: "☁️" };
-        if (code >= 51 && code <= 67) return { label: "Rainy", icon: "🌧️" };
-        if (code >= 71 && code <= 77) return { label: "Snowy", icon: "❄️" };
-        if (code >= 80 && code <= 82) return { label: "Rain Showers", icon: "🌦️" };
-        if (code >= 95) return { label: "Thunderstorm", icon: "⛈️" };
-        return { label: "Weather Update", icon: "🌤️" };
-    };
+          <div className="condition-block">
+            <Icon className="condition-icon" sx={{ color: condition.color }} />
+            <span>{condition.label}</span>
+          </div>
+        </div>
 
-    const condition = getWeatherCondition(weather.weatherCode);
+        <div className="card-divider" />
 
-    return (
-        <Card
-            sx={{
-                mt: 4,
-                width: { xs: "100%", sm: 420 },
-                borderRadius: 5,
-                background: "linear-gradient(135deg, rgba(96,165,250,0.2), rgba(124,58,237,0.2))",
-                border: "1px solid rgba(255,255,255,0.2)",
-                boxShadow: "0 20px 50px rgba(15, 23, 42, 0.45)",
-                color: "#fff",
-            }}
-        >
-            <CardContent sx={{ p: 4 }}>
-                <Stack spacing={2}>
-                    <Box>
-                        <Typography variant="h4" fontWeight={700}>
-                            {weather.city}
-                        </Typography>
-                        <Typography variant="body1" color="rgba(255,255,255,0.7)">
-                            {weather.country}
-                        </Typography>
-                    </Box>
-
-                    <Box sx={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-                        <Typography variant="h2" fontWeight={800} sx={{ lineHeight: 1 }}>
-                            {weather.temperature}°
-                        </Typography>
-                        <Box sx={{ textAlign: "center" }}>
-                            <Typography variant="h3">{condition.icon}</Typography>
-                            <Typography variant="subtitle1">{condition.label}</Typography>
-                        </Box>
-                    </Box>
-
-                    <Stack direction="row" spacing={2} justifyContent="space-between">
-                        <Box sx={{ flex: 1, p: 2, borderRadius: 3, background: "rgba(255,255,255,0.08)" }}>
-                            <Typography variant="body2" color="rgba(255,255,255,0.7)">Humidity</Typography>
-                            <Typography variant="h6">💧 {weather.humidity}%</Typography>
-                        </Box>
-
-                        <Box sx={{ flex: 1, p: 2, borderRadius: 3, background: "rgba(255,255,255,0.08)" }}>
-                            <Typography variant="body2" color="rgba(255,255,255,0.7)">Wind</Typography>
-                            <Typography variant="h6">💨 {weather.windSpeed} km/h</Typography>
-                        </Box>
-                    </Stack>
-                </Stack>
-            </CardContent>
-        </Card>
-    );
+        <Stack direction="row" className="quick-stats">
+          <div>
+            <span>Humidity</span>
+            <strong>{weather.humidity}%</strong>
+          </div>
+          <div>
+            <span>Wind speed</span>
+            <strong>{Math.round(weather.windSpeed)} km/h</strong>
+          </div>
+          <div>
+            <span>Feels like</span>
+            <strong>{displayTemp(weather.apparentTemperature ?? weather.temperature)}</strong>
+          </div>
+        </Stack>
+      </CardContent>
+    </Card>
+  );
 }
 
 export default WeatherCard;

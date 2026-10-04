@@ -16,5 +16,7 @@ export const conditionFor = (code) => {
   if (code >= 95) {
     return { label: "Thunderstorms", Icon: ThunderstormRoundedIcon, color: "#d8c5ff" };
   }
+
   return { label: "Rain showers", Icon: CloudRoundedIcon, color: "#8fc8ff" };
 };
+
